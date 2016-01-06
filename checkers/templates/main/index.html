@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+		<title>Checkers</title>
+		<link href="{{ url_for('static', filename='all.css') }}" rel="stylesheet">
+
+	</head>
+	<body>
+
+		<div class="container outer">
+			<div class="container inner">
+
+				<div class="board">
+
+					{% for y in range(7, -1, -1) %}
+
+						{% for x in range(0, 8) %}
+
+							<div class="square" data-x="{{ x }}" data-y="{{ y }}">
+								<span style="float: left;">{{ x }},{{ y }}</span>
+
+								{% if y != 3 and y != 4 %}
+
+									{% if y < 3 %}
+										{% set class = "red" %}
+									{% else %}
+										{% set class = "black" %}
+									{% endif %}
+
+
+									{% if (x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) %}
+										<div class="checker {{ class }}" data-x="{{ x }}" data-y="{{ y }}"></div>
+									{% endif %}
+
+								{% endif %}
+							</div>
+
+						{% endfor %}
+
+					{% endfor %}
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='all.js') }}"></script>
+
+	</body>
+</html>

@@ -1,0 +1,94 @@
+* {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	box-sizing: border-box;
+}
+
+html, body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+.container.outer {
+	display: table;
+}
+
+.container.inner {
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.board {
+	border: solid 1px #000;
+	display: inline-block;
+	position: relative;
+}
+
+.square {
+	width: 11vh;
+	height: 11vh;
+	border: solid 1px #000;
+	float: left;
+	background: url("wood-dark.svg");
+	background-size: 100px 100px;
+
+	color: white;
+	font-family: arial;
+	font-size: 11px;
+}
+
+.square:nth-child(8n + 1){
+	clear: both;
+}
+
+.square[data-y="7"]:nth-child(even),
+.square[data-y="6"]:nth-child(odd),
+.square[data-y="5"]:nth-child(even),
+.square[data-y="4"]:nth-child(odd),
+.square[data-y="3"]:nth-child(even),
+.square[data-y="2"]:nth-child(odd),
+.square[data-y="1"]:nth-child(even),
+.square[data-y="0"]:nth-child(odd){
+	background: url("wood-light.svg");
+}
+
+.square.possible {
+	background: white;
+}
+
+.checker {
+	width: 11vh;
+	height: 11vh;
+	border-radius: 5.5vh;
+	cursor: grab;
+	border-width: 2px;
+}
+
+
+.checker.selected {
+	border: solid 2px white;
+}
+
+.checker:active {
+	cursor: grabbing;
+}
+
+.checker.red {
+	background: red;
+}
+
+.checker.black {
+	background: black;
+}
