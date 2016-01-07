@@ -2,6 +2,8 @@ $(function(){
 
 	var activeChecker = null;
 	var turn = "black";
+	var yDirRed = +1;
+	var yDirBlack = -1;
 
 	$(".checker").on("click", function(){
 		var checker = $(this);
@@ -31,17 +33,31 @@ $(function(){
 	$(".square").on("click", function(){
 		var square = $(this);
 
-		if(isValidMove(square)){
+		if(isValidMove(square, false) || isValidMove(square, true)){
 			activeChecker.detach();
 			activeChecker.removeClass("selected");
 			square.append(activeChecker);
 
-			activeChecker.data("x", square.data("x"));
-			activeChecker.data("y", square.data("y"));
+			var x1 = parseInt(activeChecker.attr("data-x"));
+			var x2 = parseInt(square.attr("data-x"));
+
+			var y1 = parseInt(activeChecker.attr("data-y"));
+			var y2 = parseInt(square.attr("data-y"));
+
+			if(Math.abs(x2 - x1) == 2){
+				var x3 = (x1 + x2) / 2;
+				var y3 = (y1 + y2) / 2;
+				getChecker(x3, y3).remove();
+			}
+
+			activeChecker.attr("data-x", x2);
+			activeChecker.attr("data-y", y2);
 
 			$(".square").removeClass("possible");
 
 			toggleTurn();
+			checkKing();
+			determineWinner();
 		}
 
 	});
@@ -50,19 +66,41 @@ $(function(){
 		return activeChecker && activeChecker.hasClass("selected");
 	}
 
-	function isValidMove(square){
+	function isValidMove(square, jump){
+		var checker = square.find(".checker");
 
 		if(!isCheckerActive() || containsChecker(square)){
 			return false;
 		}
 
-		var x1 = parseInt(square.data("x"));
-		var x2 = parseInt(activeChecker.data("x"));
+		var x1 = parseInt(square.attr("data-x"));
+		var x2 = parseInt(activeChecker.attr("data-x"));
 
-		var y1 = parseInt(square.data("y"));
-		var y2 = parseInt(activeChecker.data("y"));
+		var y1 = parseInt(square.attr("data-y"));
+		var y2 = parseInt(activeChecker.attr("data-y"));
 
-		return Math.abs(x1 - x2) == 1 && Math.abs(y1 - y2) == 1;
+		if(!isKing(activeChecker)){
+			if(activeChecker.hasClass("red")){
+				var yDir = yDirRed;
+			} else if(activeChecker.hasClass("black")){
+				var yDir = yDirBlack;
+			}
+
+			if(jump && (y1 - y2) != (yDir * 2)){
+				return false;
+			} else if(!jump && (y1 - y2) != yDir){
+				return false;
+			}
+		}
+
+		var dX =  Math.abs(x1 - x2);
+		var dY = Math.abs(y1 - y2);
+
+		if(jump){
+			return dX == 2 && dY == 2;
+		} else {
+			return dX == 1 && dY == 1;
+		}
 
 	}
 
@@ -71,33 +109,83 @@ $(function(){
 	}
 
 	function displayPossibleMoves(square){
+		var checker = square.find(".checker");
 
 		$(".square").removeClass("possible");
 
-		var x = square.data("x");
-		var y = square.data("y");
+		var x = parseInt(square.attr("data-x"));
+		var y = parseInt(square.attr("data-y"));
 
-		var square1 = $(".square[data-x=" + (x + 1) + "][data-y=" + (y + 1) + "]");
-		if(isValidMove(square1))
-			square1.addClass("possible");
+		var coords = [
+			[1,1],
+			[1,-1],
+			[-1,1],
+			[-1,-1]
+		];
 
-		var square2 = $(".square[data-x=" + (x + 1) + "][data-y=" + (y - 1) + "]")
-		if(isValidMove(square2))
-			square2.addClass("possible");
+		for(i in coords){
+			var x1 = coords[i][0];
+			var y1 = coords[i][1];
 
-		var square3 = $(".square[data-x=" + (x - 1) + "][data-y=" + (y + 1) + "]")
-		if(isValidMove(square3))
-			square3.addClass("possible");
+			var square = getSquare(x + x1, y + y1);
 
-		var square4 = $(".square[data-x=" + (x - 1) + "][data-y=" + (y - 1) + "]")
-		if(isValidMove(square4))
-			square4.addClass("possible");
+			if(isValidMove(square, false)){
+				square.addClass("possible");
+			} else if(hasOpposingPiece(square)){
+				var square2 = getSquare(x + (x1 * 2), y + (y1 * 2));
+				if(isValidMove(square2, true)){
+					square2.addClass("possible");
+				}
+			}
 
+		}
+
+	}
+
+	function hasOpposingPiece(square){
+		return containsChecker(square) && !square.find(".checker").hasClass(turn);
 	}
 
 	function toggleTurn(){
 		turn = (turn == "black" ? "red" : "black");
 		$(".turn .value").html(turn);
+	}
+
+	function getSquare(x, y){
+		return $(".square[data-x=" + x + "][data-y=" + y + "]");
+	}
+
+	function getChecker(x, y){
+		return $(".checker[data-x=" + x + "][data-y=" + y + "]");
+	}
+
+	function determineWinner(){
+		var checkers = $(".checker");
+		var blacks = checkers.filter(".black");
+		var reds = checkers.filter(".red");
+
+		if(blacks.length == 0){
+			alert("Red Wins");
+		} else if(reds.length == 0){
+			alert("Black Wins");
+		}
+	}
+
+	function isKing(checker){
+		return checker.hasClass("king");
+	}
+
+	function checkKing(){
+		if(activeChecker.hasClass("red")){
+			var y = 7;
+		} else {
+			var y = 0;
+		}
+
+		if(activeChecker.attr("data-y") == y){
+			activeChecker.addClass("king");
+		}
+
 	}
 
 });

@@ -74,12 +74,10 @@ html, body {
 	height: 11vh;
 	border-radius: 5.5vh;
 	cursor: grab;
-	border-width: 2px;
+	border: solid 2px;
 }
 
-
 .checker.selected {
-	border: solid 2px white;
 }
 
 .checker:active {
@@ -87,11 +85,31 @@ html, body {
 }
 
 .checker.red {
-	background: red;
+	background-color: red;
+	border-color: red;
 }
 
 .checker.black {
-	background: black;
+	background-color: black;
+	border-color: black;
+}
+
+.checker.red.selected,
+.checker.black.selected {
+	border-color: white;
+}
+
+.checker.king {
+	background-position: center center;
+	background-size: 80% 80%;
+	background-repeat: no-repeat;
+}
+
+.checker.black.king {
+	background-image: url("red-king.svg");
+}
+.checker.red.king {
+	background-image: url("black-king.svg");
 }
 
 .turn {
@@ -99,12 +117,15 @@ html, body {
 	margin: 20px;
 	font-size: 24px;
 }
+
 .turn .label {
 	display: inline;
 }
+
 .turn .value {
 	display: inline-block;
 }
+
 .turn .value::first-letter {
 	text-transform: capitalize;
 }
