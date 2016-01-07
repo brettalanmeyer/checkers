@@ -13,6 +13,7 @@ html, body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	font-family: Arial;
 }
 
 .container {
@@ -91,4 +92,19 @@ html, body {
 
 .checker.black {
 	background: black;
+}
+
+.turn {
+	position: absolute;
+	margin: 20px;
+	font-size: 24px;
+}
+.turn .label {
+	display: inline;
+}
+.turn .value {
+	display: inline-block;
+}
+.turn .value::first-letter {
+	text-transform: capitalize;
 }

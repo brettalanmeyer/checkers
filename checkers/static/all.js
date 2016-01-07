@@ -1,16 +1,28 @@
 $(function(){
 
 	var activeChecker = null;
+	var turn = "black";
 
 	$(".checker").on("click", function(){
 		var checker = $(this);
 
+		if(!checker.hasClass(turn)){
+			return false;
+		}
+
+		var square = checker.parent(".square");
+
+		var hasClass = checker.hasClass("selected");
+
 		$(".checker").removeClass("selected");
-		checker.addClass("selected");
 
-		activeChecker = checker;
-
-		displayPossibleMoves(checker.parent(".square"));
+		if(hasClass){
+			activeChecker = null;
+		} else {
+			checker.addClass("selected");
+			activeChecker = checker;
+		}
+		displayPossibleMoves(square);
 
 		return false;
 	});
@@ -28,6 +40,8 @@ $(function(){
 			activeChecker.data("y", square.data("y"));
 
 			$(".square").removeClass("possible");
+
+			toggleTurn();
 		}
 
 	});
@@ -79,6 +93,11 @@ $(function(){
 		if(isValidMove(square4))
 			square4.addClass("possible");
 
+	}
+
+	function toggleTurn(){
+		turn = (turn == "black" ? "red" : "black");
+		$(".turn .value").html(turn);
 	}
 
 });
