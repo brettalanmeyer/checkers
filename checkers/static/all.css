@@ -43,8 +43,8 @@ html, body {
 	border: solid 1px #000;
 	float: left;
 	background: url("wood-dark.svg");
-	background-size: 100px 100px;
-
+	background-size: 120% 120%;
+	background-position: center center;
 	color: white;
 	font-family: arial;
 	font-size: 11px;
@@ -128,4 +128,15 @@ html, body {
 
 .turn .value::first-letter {
 	text-transform: capitalize;
+}
+
+.coords {
+	float: left;
+	display: none;
+}
+.coords-toggle {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	cursor: pointer;
 }

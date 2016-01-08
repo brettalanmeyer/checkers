@@ -2,13 +2,14 @@ $(function(){
 
 	var activeChecker = null;
 	var turn = "black";
-	var yDirRed = +1;
-	var yDirBlack = -1;
+	var yDirBlack = +1;
+	var yDirRed = -1;
+	var jumping = false;
 
 	$(".checker").on("click", function(){
 		var checker = $(this);
 
-		if(!checker.hasClass(turn)){
+		if(!checker.hasClass(turn) || jumping){
 			return false;
 		}
 
@@ -24,18 +25,21 @@ $(function(){
 			checker.addClass("selected");
 			activeChecker = checker;
 		}
-		displayPossibleMoves(square);
+		displayPossibleMoves(square, false);
 
 		return false;
 	});
 
-
 	$(".square").on("click", function(){
 		var square = $(this);
 
+		if(jumping && !square.hasClass("possible")){
+			return false;
+		}
+
 		if(isValidMove(square, false) || isValidMove(square, true)){
+
 			activeChecker.detach();
-			activeChecker.removeClass("selected");
 			square.append(activeChecker);
 
 			var x1 = parseInt(activeChecker.attr("data-x"));
@@ -48,6 +52,7 @@ $(function(){
 				var x3 = (x1 + x2) / 2;
 				var y3 = (y1 + y2) / 2;
 				getChecker(x3, y3).remove();
+				jumping = true;
 			}
 
 			activeChecker.attr("data-x", x2);
@@ -55,9 +60,18 @@ $(function(){
 
 			$(".square").removeClass("possible");
 
-			toggleTurn();
-			checkKing();
-			determineWinner();
+			if(jumping){
+				displayPossibleMoves(square, true);
+			}
+
+			if($(".square.possible").length == 0){
+				jumping = false;
+				activeChecker.removeClass("selected");
+				toggleTurn();
+				checkKing();
+				determineWinner();
+			}
+
 		}
 
 	});
@@ -93,7 +107,7 @@ $(function(){
 			}
 		}
 
-		var dX =  Math.abs(x1 - x2);
+		var dX = Math.abs(x1 - x2);
 		var dY = Math.abs(y1 - y2);
 
 		if(jump){
@@ -108,7 +122,7 @@ $(function(){
 		return !square.find(".checker").length == 0;
 	}
 
-	function displayPossibleMoves(square){
+	function displayPossibleMoves(square, doubleJump){
 		var checker = square.find(".checker");
 
 		$(".square").removeClass("possible");
@@ -129,7 +143,7 @@ $(function(){
 
 			var square = getSquare(x + x1, y + y1);
 
-			if(isValidMove(square, false)){
+			if(!doubleJump && isValidMove(square, false)){
 				square.addClass("possible");
 			} else if(hasOpposingPiece(square)){
 				var square2 = getSquare(x + (x1 * 2), y + (y1 * 2));
@@ -164,11 +178,17 @@ $(function(){
 		var blacks = checkers.filter(".black");
 		var reds = checkers.filter(".red");
 
-		if(blacks.length == 0){
-			alert("Red Wins");
-		} else if(reds.length == 0){
-			alert("Black Wins");
+		if(blacks.length == 0 || blacks.length == 0){
+			if(blacks.length == 0){
+				alert("Red Wins");
+			} else if(reds.length == 0){
+				alert("Black Wins");
+			}
+			if(confirm("Would you like to play again?")){
+				window.location = "/";
+			}
 		}
+
 	}
 
 	function isKing(checker){
@@ -176,7 +196,7 @@ $(function(){
 	}
 
 	function checkKing(){
-		if(activeChecker.hasClass("red")){
+		if(activeChecker.hasClass("black")){
 			var y = 7;
 		} else {
 			var y = 0;
@@ -187,5 +207,9 @@ $(function(){
 		}
 
 	}
+
+	$(".coords-toggle").on("click", function(){
+		$(".coords").toggle();
+	});
 
 });

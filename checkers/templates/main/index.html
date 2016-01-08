@@ -12,6 +12,8 @@
 	</head>
 	<body>
 
+		<button class="coords-toggle">Toggle Coords</button>
+
 		<div class="turn">
 			<span class="label">Turn:</span>
 			<span class="value">black</span>
@@ -27,14 +29,14 @@
 						{% for x in range(0, 8) %}
 
 							<div class="square" data-x="{{ x }}" data-y="{{ y }}">
-								<span style="float: left;">{{ x }},{{ y }}</span>
+								<span class="coords">{{ x }},{{ y }}</span>
 
 								{% if y != 3 and y != 4 %}
 
 									{% if y < 3 %}
-										{% set class = "red" %}
-									{% else %}
 										{% set class = "black" %}
+									{% else %}
+										{% set class = "red" %}
 									{% endif %}
 
 
