@@ -11,13 +11,6 @@ app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, async_mode="gevent")
 thread = None
 
-# def background_thread():
-# 	count = 0
-# 	while True:
-# 		time.sleep(10)
-# 		count += 1
-# 		socketio.emit("response", { "data": "Server generated event", "count": count}, namespace = "/move")
-
 @app.route("/<int:team>")
 def index(team):
 
@@ -26,24 +19,25 @@ def index(team):
 	else:
 		color = "red"
 
-	# global thread
-	# if thread is None:
-	# 	thread = Thread(target=background_thread)
-	# 	thread.daemon = True
-	# 	thread.start()
 	return render_template("board.html", color = color)
 
-@socketio.on("move", namespace="/move")
-def test_broadcast_message(message):
-	# session["receive_count"] = session.get("receive_count", 0) + 1
-	emit("response", {
-		"x1": message["x1"],
-		"x2": message["x2"],
-		"y1": message["y1"],
-		"y2": message["y2"],
+@socketio.on("send-move", namespace="/move")
+def move(data):
+	emit("receive-move", {
+		"x1": data["x1"],
+		"x2": data["x2"],
+		"y1": data["y1"],
+		"y2": data["y2"],
+		"black": data["black"],
+		"red": data["red"]
+	}, broadcast = True)
+
+@socketio.on("send-message", namespace="/move")
+def message(message):
+	emit("receive-message", {
+		"message": message["message"],
 		"black": message["black"],
 		"red": message["red"]
-		# "count": session["receive_count"]
 	}, broadcast = True)
 
 if __name__ == "__main__":

@@ -63,7 +63,7 @@ $(function(){
 			activeChecker.attr("data-x", x2);
 			activeChecker.attr("data-y", y2);
 
-			socket.emit("move", {
+			socket.emit("send-move", {
 				"x1": x1,
 				"x2": x2,
 				"y1": y1,
@@ -227,20 +227,49 @@ $(function(){
 	});
 
 
-	socket.on("response", function(data) {
-
-		console.log(data);
-
+	socket.on("receive-move", function(data){
 		if(data.red && isPlayerBlack || data.black && isPlayerRed){
-
 			$(".checker[data-x=" + data.x1 + "][data-y=" + data.y1 + "]").click();
 			setTimeout(function(){
 				$(".square[data-x=" + data.x2 + "][data-y=" + data.y2 + "]").click();
 			}, 500);
-
-		} else {
-			console.log("don't move");
 		}
+	});
+
+
+	var message = $("#message");
+
+	$("#messages").on("submit", function(){
+
+		socket.emit("send-message", {
+			"message": message.val(),
+			"black": isPlayerBlack,
+			"red": isPlayerRed
+		});
+
+		message.val("");
+
+		return false;
+
+	});
+
+	socket.on("receive-message", function(data){
+
+		var p = $("<p />");
+
+		if(data.black){
+			text = "Black: ";
+		} else {
+			text = "Red: ";
+		}
+		text += data.message;
+
+		p.html(text);
+
+		$(".messages").append(p);
+
+		$(".messages").scrollTop($(".messages")[0].scrollHeight);
+
 	});
 
 });

@@ -147,3 +147,41 @@ html, body {
 	right: 20px;
 	cursor: pointer;
 }
+
+.chat {
+	position: absolute;
+	top: 40px;
+	right: 40px;
+	width: 300px;
+}
+
+.chat .messages {
+	height: 300px;
+	border: solid 1px #ccc;
+	margin-bottom: 8px;
+	overflow-y: auto;
+}
+
+.chat .messages p {
+	margin: 0;
+	padding: 2px 4px;
+	font-size: 13px;
+}
+
+.chat input {
+	width: 198px;
+	border: solid 1px #ccc;
+	display: inline-block;
+	float: left;
+	padding: 2px 6px;
+}
+.chat button {
+	width: 100px;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	border: solid 1px #ccc;
+	background: none;
+	float: right;
+	padding: 1px 0;
+}
