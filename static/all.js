@@ -1,10 +1,15 @@
 $(function(){
 
+	var socket = io.connect("http://" + document.domain + ':' + location.port + "/move");
+
 	var activeChecker = null;
 	var turn = "black";
 	var yDirBlack = +1;
 	var yDirRed = -1;
 	var jumping = false;
+
+	var isPlayerBlack = $(".board").hasClass("black");
+	var isPlayerRed = $(".board").hasClass("red");
 
 	$(".checker").on("click", function(){
 		var checker = $(this);
@@ -57,6 +62,15 @@ $(function(){
 
 			activeChecker.attr("data-x", x2);
 			activeChecker.attr("data-y", y2);
+
+			socket.emit("move", {
+				"x1": x1,
+				"x2": x2,
+				"y1": y1,
+				"y2": y2,
+				"black": isPlayerBlack,
+				"red": isPlayerRed
+			});
 
 			$(".square").removeClass("possible");
 
@@ -210,6 +224,23 @@ $(function(){
 
 	$(".coords-toggle").on("click", function(){
 		$(".coords").toggle();
+	});
+
+
+	socket.on("response", function(data) {
+
+		console.log(data);
+
+		if(data.red && isPlayerBlack || data.black && isPlayerRed){
+
+			$(".checker[data-x=" + data.x1 + "][data-y=" + data.y1 + "]").click();
+			setTimeout(function(){
+				$(".square[data-x=" + data.x2 + "][data-y=" + data.y2 + "]").click();
+			}, 500);
+
+		} else {
+			console.log("don't move");
+		}
 	});
 
 });

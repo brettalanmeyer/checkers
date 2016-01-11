@@ -22,7 +22,7 @@
 		<div class="container outer">
 			<div class="container inner">
 
-				<div class="board">
+				<div class="board {{ color }}">
 
 					{% for y in range(7, -1, -1) %}
 
@@ -59,6 +59,7 @@
 
 
 		<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='all.js') }}"></script>
 
 	</body>
