@@ -11,8 +11,12 @@ app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, async_mode="gevent")
 thread = None
 
+@app.route("/")
+def index():
+	return render_template("index.html")
+
 @app.route("/<int:team>")
-def index(team):
+def board(team):
 
 	if team == 0:
 		color = "black"
@@ -41,4 +45,4 @@ def message(message):
 	}, broadcast = True)
 
 if __name__ == "__main__":
-	socketio.run(app, debug=True, host = "0.0.0.0", port = 5020)
+	socketio.run(app, host = "0.0.0.0", port = 5020)

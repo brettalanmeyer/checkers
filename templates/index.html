@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+	<head>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-        <title>Checkers</title>
+		<title>Checkers</title>
+		<link href="{{ url_for('static', filename='all.css') }}" rel="stylesheet">
 
-    </head>
-    <body>
+	</head>
+	<body>
 
-        <form action="/" method="POST">
-            <button>Join Game</button>
-        </form>
+		<div class="container outer">
+			<div class="container inner">
 
-    </body>
+				<form action="/0" method="GET">
+					<button class="team-btn black">Black</button>
+				</form>
+
+				<form action="/1" method="GET">
+					<button class="team-btn red">Red</button>
+				</form>
+
+			</div>
+		</div>
+
+	</body>
 </html>

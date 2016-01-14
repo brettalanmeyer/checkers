@@ -16,6 +16,24 @@ html, body {
 	font-family: Arial;
 }
 
+.team-btn {
+	padding: 20px 40px;
+	width: 40%;
+	color: white;
+	font-size: 10vh;
+	border-radius: 10px;
+	border: none;
+	margin-bottom: 12px;
+	cursor: pointer;
+}
+.team-btn.red {
+	background-color: red;
+}
+.team-btn.black {
+	background-color: black;
+}
+
+
 .container {
 	width: 100%;
 	height: 100%;
@@ -117,6 +135,9 @@ html, body {
 }
 .checker.red.king {
 	background-image: url("black-king.svg");
+}
+.board.red .checker {
+	transform: rotate(180deg);
 }
 
 .turn {
